@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
     private int currentPlayerIndex = 0;
 
     public bool isGameStarted = false;
+    private bool isHost = false;
+    private string prompt;
+    
 
     public class Player
     {
@@ -85,6 +88,16 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.AddUserUI(_username, _id, _points);
     }
 
+    public void AddPointToPlayer(int _id)
+    {
+        playerList[_id].addPoint();
+
+        if (_id == Client.Instance.myId)
+        {
+            CurrentPoints++;
+            UIManager.Instance.setSelfProfilePointsText(CurrentPoints);
+        }
+    }
     public void AssignNewRiddle()
     {
         StartCoroutine(AssignNewRiddleCoroutine());
@@ -95,14 +108,18 @@ public class GameManager : MonoBehaviour
     {
         
         yield return new WaitForSeconds(0.85f);
-        currentAttempts = 0;
-        UIManager.Instance.SetRiddleText(riddleQuestion);
-        UIManager.Instance.SetRiddleText(riddleQuestion);
-        UIManager.Instance.ResetRiddleAnswer();
-        UIManager.Instance.ResetUserUIMarks();
-        UIManager.Instance.SortPlayerListByScore();
-        UIManager.Instance.ClearAttemptLog();
+        //currentAttempts = 0;
+        //UIManager.Instance.SetRiddleText(riddleQuestion);
+        //UIManager.Instance.SetRiddleText(riddleQuestion);
+        //UIManager.Instance.ResetRiddleAnswer();
+        //UIManager.Instance.ResetUserUIMarks();
+        //UIManager.Instance.SortPlayerListByScore();
+        //UIManager.Instance.ClearAttemptLog();
+        //UIManager.Instance.EnableAnswerField();
+
+        UIManager.Instance.SetRiddleText(prompt);
         UIManager.Instance.EnableAnswerField();
+
     }
     public void SetRiddleAnswer(string _riddleAnswer)
     {
@@ -171,7 +188,22 @@ public class GameManager : MonoBehaviour
         
     }
 
-    
+    public void FinishRound(int _roundWinner, int _votes)
+    {
+        if(_votes != 0)
+        {
+            AddPointToPlayer(_roundWinner);
+            UIManager.Instance.SetHighestVotesUI(_roundWinner);
+        }
+        
+        StartCoroutine(SendFinishRound());
+    }
+
+    IEnumerator SendFinishRound()
+    {
+        yield return new WaitForSeconds(2.5f);
+        ClientSend.TCPFinishedRoundSend();
+    }
 
     public Dictionary<string, int> GetAllPlayerPoints()
     {
@@ -184,4 +216,16 @@ public class GameManager : MonoBehaviour
         return userList;
         
     }
+
+    public void SetPrompt(string _prompt)
+    {
+        prompt = _prompt;
+    }
+
+    public void Like(int id)
+    {
+        UIManager.Instance.DisableAllLikeButtonExcept(id);
+        ClientSend.TCPSendVoteForReply(id);
+    }
+
 }

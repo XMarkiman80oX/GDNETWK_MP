@@ -37,21 +37,37 @@ public class ClientHandler : MonoBehaviour
 
     }
 
-    public static void TCPRiddleReceived(Packet _packet)
+    public static void TCPPromptChoicesReceived(Packet _packet)
     {
+        
         if (!GameManager.Instance.isGameStarted)
             GameManager.Instance.StartGame();
+        string _choice1 = _packet.ReadString();
+        string _choice2 = _packet.ReadString();
+        string _choice3 = _packet.ReadString();
 
-        string _riddle = _packet.ReadString();
+        Debug.Log($"Prompt Choices received {_choice1}, {_choice2}, {_choice3}");
+        UIManager.Instance.DisplayChoices(_choice1.ToString(), _choice2.ToString(), _choice3.ToString());
+        UIManager.Instance.SetRiddleText("");
+        UIManager.Instance.ClearUserReplyUIList();
+    }
+
+
+    public static void TCPRiddleReceived(Packet _packet)
+    {
+        
+
+        string _prompt = _packet.ReadString();
         string _answer = _packet.ReadString();
 
-        Debug.Log($"The riddle is this: {_riddle}");
+        Debug.Log($"The riddle is this: {_prompt}");
         Debug.Log($"The answer is this: {_answer}");
 
-        GameManager.Instance.SetRiddleQuestion(_riddle);
+        GameManager.Instance.SetPrompt(_prompt);
         GameManager.Instance.SetRiddleAnswer(_answer);
         GameManager.Instance.AssignNewRiddle();
         UIManager.Instance.RefreshPlayerScores();
+
     }
 
     public static void TCPPlayerReceived(Packet _packet)
@@ -107,4 +123,61 @@ public class ClientHandler : MonoBehaviour
             UIManager.Instance.RemoveUserUI(_disconnectedPlayer);
         }
     }
+
+    //public static void TCPHostPromptRelayReceived(Packet _packet)
+    //{
+    //    string _hostPrompt = _packet.ReadString();
+
+    //    GameManager.Instance.SetPrompt(_hostPrompt);
+    //}
+
+    public static void TCPPromptReplyRelayReceived(Packet _packet)
+    {
+        int _replySenderId = _packet.ReadInt();
+        string _promptReply = _packet.ReadString();
+        //UIManager.Instance.UpdateAttemptLog(_replySenderId.ToString(), _promptReply, false);
+
+        if(GameManager.Instance.playerList.ContainsKey(_replySenderId))
+        {
+            string username = GameManager.Instance.playerList[_replySenderId].username;
+            UIManager.Instance.AddUserReplyUI(_replySenderId, username, _promptReply);
+        }
+        
+    }
+
+    public static void TCPAllPlayersRepliedReceived(Packet _packet)
+    {
+        string _msg = _packet.ReadString();
+        Debug.Log(_msg);
+        UIManager.Instance.EnableAllLikeButton();
+    }
+
+    public static void TCPVoteForReplyRelayReceived(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        int _votes = _packet.ReadInt();
+
+        UIManager.Instance.SetVoteForReplyUI(_id, _votes);
+    }
+
+    public static void TCPHighestVotesReceived(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        int _votes = _packet.ReadInt();
+
+        Debug.Log(_id);
+
+        GameManager.Instance.FinishRound(_id, _votes);
+        
+    }
+
+    public static void TCPTimerReceived(Packet _packet)
+    {
+        float _currentTimerValue = _packet.ReadFloat();
+
+
+        Debug.Log(_currentTimerValue);
+        UIManager.Instance.SetTimer((int)_currentTimerValue);
+    }
+
 }

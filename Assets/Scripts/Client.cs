@@ -55,6 +55,7 @@ public class Client : MonoBehaviour
 
     public void ConnectToServerUDP()
     {
+        Debug.Log("This Runs");
         udp.Connect(((IPEndPoint)Instance.tcp.socket.Client.LocalEndPoint).Port);
     }
 
@@ -293,11 +294,18 @@ public class Client : MonoBehaviour
             {(int)ServerPackets.welcome, ClientHandler.Welcome  },
             {(int)ServerPackets.udpTest, ClientHandler.UDPTest  },
             {(int)ServerPackets.playerReadyReceived, ClientHandler.TCPPlayerReadyReceivedConfirmReceived},
+            {(int)ServerPackets.PromptChoicesSend, ClientHandler.TCPPromptChoicesReceived  },
             {(int)ServerPackets.RiddleSend, ClientHandler.TCPRiddleReceived  },
             {(int)ServerPackets.AnswerAttemptReceived, ClientHandler.TCPAnswerAttemptReceivedConfirmed  },
             {(int)ServerPackets.PlayerListSend, ClientHandler.TCPPlayerReceived  },
-            { (int)ServerPackets.ChatMessageForwardSend, ClientHandler.TCPChatMessageForwardReceived },
-            {(int)ServerPackets.PlayerDisconnectSend, ClientHandler.TCPPlayerDisconnectReceived  }
+            {(int)ServerPackets.ChatMessageForwardSend, ClientHandler.TCPChatMessageForwardReceived },
+            {(int)ServerPackets.PlayerDisconnectSend, ClientHandler.TCPPlayerDisconnectReceived  },
+            {(int)ServerPackets.PromptReplyRelaySend, ClientHandler.TCPPromptReplyRelayReceived  },
+            {(int)ServerPackets.AllPlayersRepliedSend, ClientHandler.TCPAllPlayersRepliedReceived  },
+            {(int)ServerPackets.VotedForReplyRelaySend, ClientHandler.TCPVoteForReplyRelayReceived  },
+            {(int)ServerPackets.HighestVotesSend, ClientHandler.TCPHighestVotesReceived  },
+            {(int)ServerPackets.TimerSend, ClientHandler.TCPTimerReceived  }
+
 
 
         };

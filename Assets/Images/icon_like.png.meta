@@ -1,13 +1,7 @@
 fileFormatVersion: 2
-guid: 2c8c885bfe31e404ea7844d5060dc8ca
+guid: 122e1fdd9c7691c4b8c8567266047a5e
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -1109302882853399160
-    second: "\u2014Pngtree\u2014green check mark and red_7021481_0"
-  - first:
-      213: -7063888503587005777
-    second: "\u2014Pngtree\u2014green check mark and red_7021481_1"
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -47,7 +41,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -93,63 +87,9 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: "\u2014Pngtree\u2014green check mark and red_7021481_0"
-      rect:
-        serializedVersion: 2
-        x: 160
-        y: 774
-        width: 801
-        height: 851
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 885d437c7e6fa90f0800000000000000
-      internalID: -1109302882853399160
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: "\u2014Pngtree\u2014green check mark and red_7021481_1"
-      rect:
-        serializedVersion: 2
-        x: 1248
-        y: 774
-        width: 1092
-        height: 951
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: faa1bb205d608fd90800000000000000
-      internalID: -7063888503587005777
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []

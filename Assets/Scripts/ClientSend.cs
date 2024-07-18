@@ -51,6 +51,17 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    public static void TCPPromptSelectSend(int _choice)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.PromptSelectSend))
+        {
+
+            _packet.Write(_choice);
+
+
+            SendTCPData(_packet);
+        }
+    }
     public static void TCPFinishedRoundSend()
     {
         bool _finishedROund = true;
@@ -86,6 +97,34 @@ public class ClientSend : MonoBehaviour
         using(Packet _packet = new Packet((int)ClientPackets.ChatMessageSend))
         {
             _packet.Write(_msg);
+            SendTCPData(_packet);
+        }
+    }
+
+    //public static void TCPHostSetPromptSend(string _prompt)
+    //{
+    //    using (Packet _packet = new Packet((int)ClientPackets.HostSetPromptSend))
+    //    {
+    //        _packet.Write(_prompt);
+    //        SendTCPData(_packet);
+    //    }
+    //}
+
+    public static void TCPPromptReplySend(string _reply)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.PromptReplySend))
+        {
+            _packet.Write(_reply);
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void TCPSendVoteForReply(int idReceiver)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.VoteForReplySend))
+        {
+            
+            _packet.Write(idReceiver);
             SendTCPData(_packet);
         }
     }

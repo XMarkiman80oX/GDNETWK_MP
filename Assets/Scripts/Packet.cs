@@ -10,6 +10,8 @@ public enum ServerPackets
     welcome = 1,
     udpTest,
     playerReadyReceived,
+    PromptChoicesSend,
+    PromptSelectReceived,
     RiddleSend,
     FinishedRoundReceived,
     PlayerListSend,
@@ -17,7 +19,16 @@ public enum ServerPackets
     AnswerAttemptReceived,
     ChatMessageReceived,
     ChatMessageForwardSend,
-    PlayerDisconnectSend
+    PlayerDisconnectSend,
+    HostSetPromptReceived,
+    HostPromptRelaySend,
+    PromptReplyReceived,
+    PromptReplyRelaySend,
+    AllPlayersRepliedSend,
+    VoteForReplyReceived,
+    VotedForReplyRelaySend,
+    HighestVotesSend,
+    TimerSend
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -26,6 +37,8 @@ public enum ClientPackets
     welcomeReceived = 1,
     udpTestReceived,
     playerReadysend,
+    PromptChoicesReceived,
+    PromptSelectSend,
     RiddleReceive,
     FinishedRoundSend,
     PlayerListReceived,
@@ -33,7 +46,16 @@ public enum ClientPackets
     AnswerAttemptSend,
     ChatMessageSend,
     ChatMessageForwardReceived,
-    PlayerDisconnectReceived
+    PlayerDisconnectReceived,
+    HostSetPromptSend,
+    HostPromptRelayReceived,
+    PromptReplySend,
+    PromptReplyRelayReceived,
+    AllPlayersRepliedReceived,
+    VoteForReplySend,
+    VotedForReplyRelayReceived,
+    HighestVotesReceived,
+    TimerReceived
 }
 
 public class Packet : IDisposable
