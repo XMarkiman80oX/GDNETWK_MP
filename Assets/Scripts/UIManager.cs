@@ -71,7 +71,7 @@ public class UIManager : MonoBehaviour
     {
         //startMenu.SetActive(false);
         //usernameField.interactable = false;
-        Debug.Log("THIS RUNS");
+        Debug.Log("THIS RUNS LEGIT");
         Client.Instance.ConnectToServerTCP();
     }
 
