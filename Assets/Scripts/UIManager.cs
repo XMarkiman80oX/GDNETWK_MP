@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     public Button Choice1Btn;
     public Button Choice2Btn;
     public Button Choice3Btn;
+    public Button submitBtn;
     public Text Choice1Txt;
     public Text Choice2Txt;
     public Text Choice3Txt;
@@ -35,6 +36,11 @@ public class UIManager : MonoBehaviour
     public GameObject selfProfileUI;
     public GameObject usersChatUI;
     public GameObject notifUI;
+    public GameObject ReplyDisplayUI;
+    public GameObject ReplyInputUI;
+    public GameObject ProfileUI;
+    public GameObject SelectPrompt;
+    public GameObject userPrompt;
     private int nUserUI = 0;
     public List<GameObject> usersMarksTrackerUIList;
     public List<GameObject> usersPointsTrackerUIList;
@@ -71,13 +77,14 @@ public class UIManager : MonoBehaviour
     {
         //startMenu.SetActive(false);
         //usernameField.interactable = false;
-        Debug.Log("THIS RUNS LEGIT");
         Client.Instance.ConnectToServerTCP();
     }
 
     public void ConnectToServerUDP()
     {
+
         Client.Instance.ConnectToServerUDP();
+
     }
 
     public void PlayerReadyChangeTCP()
@@ -101,19 +108,23 @@ public class UIManager : MonoBehaviour
         Choice2Txt.text = choice2;
         Choice3Txt.text = choice3;
 
-        Choice1Btn.gameObject.SetActive(true);
-        Choice2Btn.gameObject.SetActive(true);
-        Choice3Btn.gameObject.SetActive(true);
+        //Choice1Btn.gameObject.SetActive(true);
+        //Choice2Btn.gameObject.SetActive(true);
+        //Choice3Btn.gameObject.SetActive(true);
 
+
+        SelectPrompt.SetActive(true);
         
     }
 
     public void HideChoices()
     {
 
-        Choice1Btn.gameObject.SetActive(false);
-        Choice2Btn.gameObject.SetActive(false);
-        Choice3Btn.gameObject.SetActive(false);
+        //Choice1Btn.gameObject.SetActive(false);
+        //Choice2Btn.gameObject.SetActive(false);
+        //Choice3Btn.gameObject.SetActive(false);
+
+        SelectPrompt.SetActive(false);
 
     }
 
@@ -203,13 +214,22 @@ public class UIManager : MonoBehaviour
         answerAttemptField.interactable = true;
     }
 
+    public void ResetAnswerAttemptFieldText()
+    {
+        answerAttemptField.text = "";
+    }
     public void ShowMainUI()
     {
         preGameCanvas.gameObject.SetActive(false);
         mainCanvas.gameObject.SetActive(true);
-        
     }
 
+    public void HideMainUI()
+    {
+
+        mainCanvas.gameObject.SetActive(false);
+        preGameCanvas.gameObject.SetActive(true);
+    }
     public void EnterAnswerAttempt()
     {
         //if(Input.GetKeyDown(KeyCode.Return))
@@ -221,12 +241,15 @@ public class UIManager : MonoBehaviour
         //        answerAttemptField.ActivateInputField();
         //}
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        
+        if(answerAttemptField.text != "" && answerAttemptField.text != " ")
         {
             ClientSend.TCPPromptReplySend(answerAttemptField.text);
             answerAttemptField.interactable = false;
-        }    
+            submitBtn.interactable = false;
 
+
+        }
 
 
     }
@@ -270,12 +293,18 @@ public class UIManager : MonoBehaviour
 
         foreach(GameObject uiObj in usersPointsTrackerUIList)
         {
+            GameObject toDestroy = null;
             if (uiObj.GetComponent<Text>().text == GameManager.Instance.playerList[userId].username && uiObj.transform.GetChild(0).gameObject.GetComponent<Text>().text == GameManager.Instance.playerList[userId].points.ToString())
             {
                 usersPointsTrackerUIList.Remove(uiObj);
-                Destroy(uiObj);
+                toDestroy = uiObj;
                 Debug.Log("Removing a player's ui2");
                 break;
+            }
+
+            if(uiObj != null)
+            {
+                Destroy(uiObj);
             }
         }
 
@@ -285,7 +314,7 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log("Adding user ui");
 
-        GameObject newUserReplyUI = Instantiate(usersMarksTrackerUI, answerAttemptField.gameObject.transform.position + new Vector3(0.0f, 400.0f - (nUserUI * 200.5f), 0.0f), Quaternion.identity, usersMarksTrackerUITransform);
+        GameObject newUserReplyUI = Instantiate(usersMarksTrackerUI, answerAttemptField.gameObject.transform.position + new Vector3(0.0f, 235.0f - (nUserUI * 100.5f), 0.0f), Quaternion.identity, usersMarksTrackerUITransform);
         nUserUI++;
         newUserReplyUI.GetComponent<UserReplyUIBehaviour>().SetUserID(_id);
         newUserReplyUI.GetComponent<UserReplyUIBehaviour>().SetName(_name);
@@ -475,6 +504,11 @@ public class UIManager : MonoBehaviour
             if (obj.GetComponent<UserReplyUIBehaviour>().id == _id)
                 obj.GetComponent<UserReplyUIBehaviour>().ChanegBGColorToGreen();
         }
+    }
+
+    public void RandomizeProfileUIColor()
+    {
+        ProfileUI.GetComponent<ProfileBehavior>().RandomizeColor();
     }
     
     /*

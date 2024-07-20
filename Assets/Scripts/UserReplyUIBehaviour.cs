@@ -82,6 +82,6 @@ public class UserReplyUIBehaviour : MonoBehaviour
 
     public void ChanegBGColorToGreen()
     {
-        bgImage.color = Color.green;
+        bgImage.color = new Color(0.3f, 1.0f, 0.3f);
     }
 }

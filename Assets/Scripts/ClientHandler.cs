@@ -48,26 +48,35 @@ public class ClientHandler : MonoBehaviour
 
         Debug.Log($"Prompt Choices received {_choice1}, {_choice2}, {_choice3}");
         UIManager.Instance.DisplayChoices(_choice1.ToString(), _choice2.ToString(), _choice3.ToString());
+        UIManager.Instance.ReplyDisplayUI.SetActive(false);
+        UIManager.Instance.ReplyInputUI.SetActive(false);
+        UIManager.Instance.userPrompt.SetActive(false);
+
         UIManager.Instance.SetRiddleText("");
         UIManager.Instance.ClearUserReplyUIList();
+        
     }
 
 
     public static void TCPRiddleReceived(Packet _packet)
     {
-        
 
+        
         string _prompt = _packet.ReadString();
-        string _answer = _packet.ReadString();
 
         Debug.Log($"The riddle is this: {_prompt}");
-        Debug.Log($"The answer is this: {_answer}");
+
+        UIManager.Instance.ReplyInputUI.SetActive(true);
+        UIManager.Instance.ReplyDisplayUI.SetActive(false);
+        UIManager.Instance.userPrompt.SetActive(true);
 
         GameManager.Instance.SetPrompt(_prompt);
-        GameManager.Instance.SetRiddleAnswer(_answer);
         GameManager.Instance.AssignNewRiddle();
+        UIManager.Instance.RandomizeProfileUIColor();
         UIManager.Instance.RefreshPlayerScores();
-
+        UIManager.Instance.ResetAnswerAttemptFieldText();
+        UIManager.Instance.submitBtn.interactable = true;
+        UIManager.Instance.HideChoices();
     }
 
     public static void TCPPlayerReceived(Packet _packet)
@@ -149,6 +158,10 @@ public class ClientHandler : MonoBehaviour
     {
         string _msg = _packet.ReadString();
         Debug.Log(_msg);
+
+        UIManager.Instance.ReplyInputUI.SetActive(false);
+        UIManager.Instance.ReplyDisplayUI.SetActive(true);
+
         UIManager.Instance.EnableAllLikeButton();
     }
 

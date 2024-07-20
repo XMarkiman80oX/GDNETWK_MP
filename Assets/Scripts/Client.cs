@@ -55,7 +55,6 @@ public class Client : MonoBehaviour
 
     public void ConnectToServerUDP()
     {
-        Debug.Log("This Runs");
         udp.Connect(((IPEndPoint)Instance.tcp.socket.Client.LocalEndPoint).Port);
     }
 
@@ -324,8 +323,14 @@ public class Client : MonoBehaviour
             if(udp.socket != null)
                 udp.socket.Close();
 
-            Debug.Log("Disconnected from server");
+            UIManager.Instance.HideMainUI();
             UIManager.Instance.SetConnectedText(false);
+
+            
+            GameManager.Instance.isGameStarted = false;
+
+            Debug.Log("Disconnected from server");
+            
         }
     }
 }
