@@ -56,22 +56,26 @@ public class Player2Manager : MonoBehaviour {
     public void Paper() {
         this._isReady = true;
         this._choice = EChoice.PAPER;
+        this._playerChoice.sprite = RPSGameManager.Instance.PaperSprite;
     }
 
     public void Scissors() {
         this._isReady = true;
         this._choice = EChoice.SCISSORS;
+        this._playerChoice.sprite = RPSGameManager.Instance.ScissorSprite;
     }
 
     public void ResetPlayer() {
         this._score = 0;
         this._isReady = false;
         this._choice = EChoice.NONE;
+        this._playerChoice.sprite = RPSGameManager.Instance.QuestionSprite;
     }
 
     public void ResetPlayerState() {
         this._isReady = false;
         this._choice = EChoice.NONE;
+        this._playerChoice.sprite = RPSGameManager.Instance.QuestionSprite;
     }
 
 

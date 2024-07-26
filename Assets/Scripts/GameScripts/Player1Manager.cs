@@ -51,27 +51,32 @@ public class Player1Manager : MonoBehaviour {
     public void Rock() {
         this._isReady = true;
         this._choice = EChoice.ROCK;
+        this._playerChoice.sprite = RPSGameManager.Instance.RockSprite;
     }
 
     public void Paper() {
         this._isReady = true;
         this._choice = EChoice.PAPER;
+        this._playerChoice.sprite = RPSGameManager.Instance.PaperSprite;
     }
 
     public void Scissors() {
         this._isReady = true;
         this._choice = EChoice.SCISSORS;
+        this._playerChoice.sprite = RPSGameManager.Instance.ScissorSprite;
     }
 
     public void ResetPlayer() {
         this._score = 0;
         this._isReady = false;
         this._choice = EChoice.NONE;
+        this._playerChoice.sprite = RPSGameManager.Instance.QuestionSprite;
     }
 
     public void ResetPlayerState() {
         this._isReady = false;
         this._choice = EChoice.NONE;
+        this._playerChoice.sprite = RPSGameManager.Instance.QuestionSprite;
     }
 
 
