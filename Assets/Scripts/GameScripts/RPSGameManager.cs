@@ -22,6 +22,9 @@ public class RPSGameManager : MonoBehaviour {
     private TMP_Text _resultText;
 
     [SerializeField]
+    private GameObject _resultTextObj;
+
+    [SerializeField]
     public Sprite RockSprite { get; }
 
     [SerializeField]
@@ -97,14 +100,17 @@ public class RPSGameManager : MonoBehaviour {
                     break;
             }
         }
+        this.ResetPlayers();
     }
 
     public void OnGameStart() {
+        this.ResetGame();
         this._playButton.enabled = false;
         this._playButton.interactable = false;
         this._choices.SetActive(true);
         this._timerRunning = true;
         this._timeLeft = this._timerLimit;
+        this._resultText.text = "";
     }
 
     public void OnGameEnd() {
@@ -114,19 +120,25 @@ public class RPSGameManager : MonoBehaviour {
         int P1 = Player1Manager.Instance.Score;
         int P2 = Player2Manager.Instance.Score;
         string resultText = "Technical Difficulties folks!";
+        int xPos = 0;
+
         if(P1 > P2) {
             resultText = "Player 1 wins!";
+            xPos = -500;
         }
-        if(P1 < P2) {
+        else if(P1 < P2) {
             resultText = "Player 2 wins!";
+            xPos = 500;
         }
         else if(P1 == P2) {
             resultText = "Draw!";
+            
         }
         else if(P1 == 0 && P2 == 0) {
             resultText = "Uhh... were you two AFK?";
         }
         this._resultText.text = resultText;
+        this._resultTextObj.transform.position = new Vector3(xPos, 350, 0);
     }
 
     public void ResetGame() {
@@ -163,7 +175,9 @@ public class RPSGameManager : MonoBehaviour {
     void Update()
     {
         if(_timeLeft > 0) {
-            CheckChoices();
+            if(Player1Manager.Instance.IsReady && Player2Manager.Instance.IsReady) {
+                CheckChoices();
+            }
             UpdateTimeLeft();
         }
         else {

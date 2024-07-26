@@ -51,6 +51,7 @@ public class Player2Manager : MonoBehaviour {
     public void Rock() {
         this._isReady = true;
         this._choice = EChoice.ROCK;
+        this._playerChoice.sprite = RPSGameManager.Instance.RockSprite;
     }
 
     public void Paper() {
