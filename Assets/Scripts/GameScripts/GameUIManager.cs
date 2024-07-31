@@ -5,22 +5,18 @@ using UnityEngine.UI;
 using System.Linq;
 
 
-public class UIManager : MonoBehaviour
+public class GameUIManager : MonoBehaviour
 {
-    public static UIManager Instance;
+    public static GameUIManager Instance;
     public Canvas preGameCanvas;
     public Canvas mainCanvas;
     public GameObject startMenu;
     
     public Button readyBtn;
-    public Button Choice1Btn;
-    public Button Choice2Btn;
-    public Button Choice3Btn;
     public Button submitBtn;
-    public Text Choice1Txt;
-    public Text Choice2Txt;
-    public Text Choice3Txt;
-    public InputField usernameField;
+
+
+
     public InputField answerAttemptField;
     public InputField chatField;
     public Text connectedStatusText;
@@ -53,6 +49,7 @@ public class UIManager : MonoBehaviour
     private Text pointsText;
 
 
+    //LIFECYCLE METHODS
     private void Awake()
     {
         if (Instance == null)
@@ -61,17 +58,20 @@ public class UIManager : MonoBehaviour
         else if (Instance != this)
             Destroy(this);
     }
-    // Start is called before the first frame update
+    
     void Start()
     {
         usersMarksTrackerUIList = new List<GameObject>();
     }
 
-    // Update is called once per frame
     void Update()
     {
 
     }
+
+
+
+    //CONNECTION METHODS
 
     public void ConnectToServerTCP()
     {
@@ -82,9 +82,7 @@ public class UIManager : MonoBehaviour
 
     public void ConnectToServerUDP()
     {
-
         Client.Instance.ConnectToServerUDP();
-
     }
 
     public void PlayerReadyChangeTCP()
@@ -100,21 +98,6 @@ public class UIManager : MonoBehaviour
         }
             
         ClientSend.TCPPlayerReadyStatusChangeSend();
-    }
-
-    public void DisplayChoices(string choice1, string choice2, string choice3)
-    {
-        Choice1Txt.text = choice1;
-        Choice2Txt.text = choice2;
-        Choice3Txt.text = choice3;
-
-        //Choice1Btn.gameObject.SetActive(true);
-        //Choice2Btn.gameObject.SetActive(true);
-        //Choice3Btn.gameObject.SetActive(true);
-
-
-        SelectPrompt.SetActive(true);
-        
     }
 
     public void HideChoices()
@@ -204,20 +187,6 @@ public class UIManager : MonoBehaviour
         timerTxt.text = _txt.ToString();
     }
 
-    public void DisableAnswerField()
-    {
-        answerAttemptField.interactable = false;
-    }
-
-    public void EnableAnswerField()
-    {
-        answerAttemptField.interactable = true;
-    }
-
-    public void ResetAnswerAttemptFieldText()
-    {
-        answerAttemptField.text = "";
-    }
     public void ShowMainUI()
     {
         preGameCanvas.gameObject.SetActive(false);
@@ -232,48 +201,23 @@ public class UIManager : MonoBehaviour
     }
     public void EnterAnswerAttempt()
     {
-        //if(Input.GetKeyDown(KeyCode.Return))
-        //{
-        //    GameManager.Instance.EvaluateAnswer(answerAttemptField.text);
-        //    answerAttemptField.text = "";
-
-        //    if (answerAttemptField.IsInteractable())
-        //        answerAttemptField.ActivateInputField();
-        //}
-
-        
-        if(answerAttemptField.text != "" && answerAttemptField.text != " ")
+        if(true)//to do: check if player is ready
         {
-            Debug.Log("THIS ONE HERE: " + answerAttemptField.text);
             ClientSend.TCPPromptReplySend(answerAttemptField.text);
             answerAttemptField.interactable = false;
             submitBtn.interactable = false;
-
-
         }
-
-
     }
 
     public void AddUserUI(string username, int id, int points)
     {
         Debug.Log("Adding user ui");
 
-        //GameObject newUserMarksUI = Instantiate(usersMarksTrackerUI, answerAttemptField.gameObject.transform.position + new Vector3(0.0f, -45.0f - (nUserUI * 25.5f), 0.0f), Quaternion.identity, usersMarksTrackerUITransform);
-
-
-
-        //newUserMarksUI.GetComponent<UserUIBehaviour>().SetUsernametext(username);
-        //newUserMarksUI.GetComponent<UserUIBehaviour>().SetUserID(id);
-
-        //usersMarksTrackerUIList.Add(newUserMarksUI);
-
         GameObject newUserPointsUI = Instantiate(usersPointsTrackerUI, usersPointsTrackerUITransform);
         newUserPointsUI.GetComponent<Text>().text = username;
         newUserPointsUI.transform.GetChild(0).gameObject.GetComponent<Text>().text = points.ToString();
         usersPointsTrackerUIList.Add(newUserPointsUI);
         SortPlayerListByScore();
-
     }
 
     public void RemoveUserUI(int userId)

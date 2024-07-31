@@ -24,17 +24,13 @@ public class RPSGameManager : MonoBehaviour {
     [SerializeField]
     private GameObject _resultTextObj;
 
-    [SerializeField]
-    public Sprite RockSprite { get; }
+    public Sprite RockSprite;
 
-    [SerializeField]
-    public Sprite ScissorSprite { get; }
+    public Sprite PaperSprite;
 
-    [SerializeField]
-    public Sprite PaperSprite { get; }
+    public Sprite ScissorSprite;
 
-    [SerializeField]
-    public Sprite QuestionSprite { get; }
+    public Sprite QuestionSprite;
 
     [SerializeField]
     private TMP_Text _timerText;
@@ -103,9 +99,18 @@ public class RPSGameManager : MonoBehaviour {
         this.ResetPlayers();
     }
 
-    public void OnGameStart() {
+    public void OnGameLoad() {//when first loading the game
+        this.IntitializePlayers();
+        this._playButton.gameObject.SetActive(true);
+        this._playButton.interactable = true;
+        this._choices.SetActive(false);
+        this._timerRunning = false;
+        this._resultText.text = "";
+    }
+
+    public void OnGameStart() {//when pressing play button
         this.ResetGame();
-        this._playButton.enabled = false;
+        this._playButton.gameObject.SetActive(false);
         this._playButton.interactable = false;
         this._choices.SetActive(true);
         this._timerRunning = true;
@@ -149,6 +154,11 @@ public class RPSGameManager : MonoBehaviour {
     public void ResetPlayers() {
         Player1Manager.Instance.ResetPlayerState();
         Player2Manager.Instance.ResetPlayerState();
+    }
+
+    public void IntitializePlayers() {
+        Player1Manager.Instance.IntitializePlayer();
+        Player2Manager.Instance.IntitializePlayer();
     }
 
     private void UpdateTimeLeft() {

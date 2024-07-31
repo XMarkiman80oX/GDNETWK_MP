@@ -32,6 +32,9 @@ public class Player2Manager : MonoBehaviour {
     [SerializeField]
     private Image _playerChoice;
 
+    [SerializeField]
+    private TMP_Text _playerNameTag;
+
     private EChoice _choice;
     public EChoice Choice {
         get { return this._choice; }
@@ -75,6 +78,13 @@ public class Player2Manager : MonoBehaviour {
 
     public void ResetPlayerState() {
         this._isReady = false;
+        this._choice = EChoice.NONE;
+        this._playerChoice.sprite = RPSGameManager.Instance.QuestionSprite;
+    }
+
+    public void IntitializePlayer() {
+        this._score = 0;
+        this._playerNameTag.text = this._name;
         this._choice = EChoice.NONE;
         this._playerChoice.sprite = RPSGameManager.Instance.QuestionSprite;
     }
