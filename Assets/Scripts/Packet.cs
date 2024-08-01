@@ -12,7 +12,7 @@ public enum GameServerPackets
     //PromptStartGame,
     PromptChoicesSend,
     PromptSelectReceived,
-    RiddleSend,
+    ChoiceSend,
     FinishedRoundReceived,
     PlayerListSend,
     PlayerListRequestReceived,

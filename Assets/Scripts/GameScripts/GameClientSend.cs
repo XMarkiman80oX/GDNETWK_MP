@@ -65,9 +65,7 @@ public class GameClientSend : MonoBehaviour
     {
         using (Packet _packet = new Packet((int)GameClientPackets.PromptSelectSend))
         {
-
             _packet.Write(_choice);
-
 
             SendTCPData(_packet);
         }

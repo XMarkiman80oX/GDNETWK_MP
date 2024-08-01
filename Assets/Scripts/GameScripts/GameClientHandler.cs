@@ -76,7 +76,7 @@ public class GameClientHandler : MonoBehaviour
 
     }
 
-    public static void TCPRiddleReceived(Packet _packet)
+    public static void TCPChoiceReceived(Packet _packet)
     {
         int _prompt = _packet.ReadInt();
 

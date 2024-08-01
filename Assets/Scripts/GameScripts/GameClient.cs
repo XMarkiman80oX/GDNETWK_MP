@@ -300,7 +300,7 @@ public class GameClient : MonoBehaviour
             {(int)GameServerPackets.PressedPlayReceived, GameClientHandler.TCPPressedPlayReceivedConfirm},
             //{(int)GameServerPackets.PromptStartGame, GameClientHandler.TCPPromptStartGame},
             {(int)GameServerPackets.PromptChoicesSend, GameClientHandler.TCPPromptChoicesReceived  },
-            {(int)GameServerPackets.RiddleSend, GameClientHandler.TCPRiddleReceived  },
+            {(int)GameServerPackets.ChoiceSend, GameClientHandler.TCPChoiceReceived  },
             {(int)GameServerPackets.AnswerAttemptReceived, GameClientHandler.TCPAnswerAttemptReceivedConfirmed  },
             {(int)GameServerPackets.PlayerListSend, GameClientHandler.TCPPlayerReceived  },
             {(int)GameServerPackets.ChatMessageForwardSend, GameClientHandler.TCPChatMessageForwardReceived },
