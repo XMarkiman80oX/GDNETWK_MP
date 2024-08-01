@@ -3,7 +3,60 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Text;
+public enum GameServerPackets
+{
+    welcome = 1,
+    udpTest,
+    playerReadyReceived,
+    PressedPlayReceived,
+    //PromptStartGame,
+    PromptChoicesSend,
+    PromptSelectReceived,
+    RiddleSend,
+    FinishedRoundReceived,
+    PlayerListSend,
+    PlayerListRequestReceived,
+    AnswerAttemptReceived,
+    ChatMessageReceived,
+    ChatMessageForwardSend,
+    PlayerDisconnectSend,
+    HostSetPromptReceived,
+    HostPromptRelaySend,
+    PromptReplyReceived,
+    PromptReplyRelaySend,
+    AllPlayersRepliedSend,
+    VoteForReplyReceived,
+    VotedForReplyRelaySend,
+    HighestVotesSend,
+    TimerSend
+}
+public enum GameClientPackets
+{
+    welcomeReceived = 1,
+    udpTestReceived,
+    playerReadysend, 
+    PromptPlayButton,
+    PromptChoicesReceived,
+    PromptSelectSend,
+    RiddleReceive,
+    FinishedRoundSend,
+    PlayerListReceived,
+    PlayerListRequested,
+    AnswerAttemptSend,
+    ChatMessageSend,
+    ChatMessageForwardReceived,
+    PlayerDisconnectReceived,
+    HostSetPromptSend,
+    HostPromptRelayReceived,
+    PromptReplySend,
+    PromptReplyRelayReceived,
+    AllPlayersRepliedReceived,
+    VoteForReplySend,
+    VotedForReplyRelayReceived,
+    HighestVotesReceived,
+    TimerReceived
 
+}
 /// <summary>Sent from server to client.</summary>
 public enum ServerPackets
 {

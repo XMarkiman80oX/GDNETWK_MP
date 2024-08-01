@@ -88,18 +88,18 @@ public class Player2Manager : MonoBehaviour {
         this._choice = EChoice.NONE;
         this._playerChoice.sprite = RPSGameManager.Instance.QuestionSprite;
     }
+    public void IntitializePlayer(string playerName) {
+        this._score = 0;
+        this._playerNameTag.text = playerName;
+        this._choice = EChoice.NONE;
+        this._playerChoice.sprite = RPSGameManager.Instance.QuestionSprite;
+    }
 
 
 
     // Start is called before the first frame update
     void Start() {
         this.ResetPlayer();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     void FixedUpdate() {

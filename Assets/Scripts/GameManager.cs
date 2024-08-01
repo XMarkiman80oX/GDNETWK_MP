@@ -57,17 +57,6 @@ public class GameManager : MonoBehaviour
     {
         playerList = new Dictionary<int, Player>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void SetupPlayerList()
-    {
-
-    }
     
     public void StartGame()
     {
@@ -77,7 +66,6 @@ public class GameManager : MonoBehaviour
             ClientSend.TCPRequestPlayerList();
             isGameStarted = true;
         }
-        
     }
 
     public void AddPlayerToList(int _id, string _username, int _points)
@@ -106,20 +94,10 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator AssignNewRiddleCoroutine()
     {
-        
         yield return new WaitForSeconds(0.85f);
-        //currentAttempts = 0;
-        //UIManager.Instance.SetRiddleText(riddleQuestion);
-        //UIManager.Instance.SetRiddleText(riddleQuestion);
-        //UIManager.Instance.ResetRiddleAnswer();
-        //UIManager.Instance.ResetUserUIMarks();
-        //UIManager.Instance.SortPlayerListByScore();
-        //UIManager.Instance.ClearAttemptLog();
-        //UIManager.Instance.EnableAnswerField();
 
         UIManager.Instance.SetRiddleText(prompt);
         UIManager.Instance.EnableAnswerField();
-
     }
     public void SetRiddleAnswer(string _riddleAnswer)
     {

@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Net;
 
-public class ClientHandler : MonoBehaviour
+public class GameClientHandler : MonoBehaviour
 {
     public static void Welcome(Packet _packet)
     {
-        string _msg =_packet.ReadString();
+        string _msg = _packet.ReadString();
         int _myId = _packet.ReadInt();
 
-        Debug.Log($"Recieved packet via TCP from server. Contains message: {_msg}. You id is {_myId}");
+        Debug.Log($"Recieved packet via TCP from server. Contains message: {_msg}. Your id is {_myId}");
 
-        Client.Instance.myId = _myId;
-        ClientSend.WelcomeReceived();
+        GameClient.Instance.myId = _myId;
+        GameClientSend.WelcomeReceived();
 
-        UIManager.Instance.setupProfile(UIManager.Instance.usernameField.text);
-        Client.Instance.isConnected = true;
-        UIManager.Instance.SetConnectedText(true);
+        GameUIManager.Instance.setupProfile(GameUIManager.Instance.usernameField.text);
+        GameClient.Instance.isConnected = true;
+        GameUIManager.Instance.SetConnectedText(true);
     }
 
     public static void UDPTest(Packet _packet)
@@ -36,46 +36,70 @@ public class ClientHandler : MonoBehaviour
         Debug.Log($"Message from server: {_msg}. Are all players ready: {_isAllPlayerReady}");
 
     }
+    public static void TCPPressedPlayReceivedConfirm(Packet packet)
+    {
+        string _msg = packet.ReadString();
+        bool _hasAllPressedPlay = packet.ReadBool();
+
+        Debug.Log($"Message from server: {_msg}. Have all pressed play: {_hasAllPressedPlay}");
+
+        Debug.Log("PLAY BUTTON CLICKED " + _msg);
+        if (!RPSGameManager.Instance.IsGameStarted && RPSGameManager.Instance.IsGameLoaded)
+        {
+            Debug.Log("PLAY BUTTON CLICKED 2");
+            RPSGameManager.Instance.OnGameStart();
+        }
+    }
 
     public static void TCPPromptChoicesReceived(Packet _packet)
     {
-        if (!GameManager.Instance.isGameStarted)
-            GameManager.Instance.StartGame();
+        string playerUsername = _packet.ReadString();
 
-        string _choice1 = _packet.ReadString();
-        string _choice2 = _packet.ReadString();
-        string _choice3 = _packet.ReadString();
+        Debug.Log("Inside TCPPromptChoicesReceived-> playerUsername:" + playerUsername);
+        //Debug.Log("Inside TCPPromptChoicesReceived-> player2Username:" + player2Username);
+        if (!RPSGameManager.Instance.IsGameLoaded)
+        {
+            RPSGameManager.Instance.OnGameLoad(playerUsername);
+        }
+        //string _choice1 = _packet.ReadString();
+        //string _choice2 = _packet.ReadString();
+        //string _choice3 = _packet.ReadString();
 
-        Debug.Log($"Prompt Choices received {_choice1}, {_choice2}, {_choice3}");
-        UIManager.Instance.DisplayChoices(_choice1.ToString(), _choice2.ToString(), _choice3.ToString());
-        UIManager.Instance.ReplyDisplayUI.SetActive(false);
-        UIManager.Instance.ReplyInputUI.SetActive(false);
-        UIManager.Instance.userPrompt.SetActive(false);
+        //Debug.Log($"Prompt Choices received {_choice1}, {_choice2}, {_choice3}");
+        ////GameUIManager.Instance.DisplayChoices(_choice1.ToString(), _choice2.ToString(), _choice3.ToString());
+        //GameUIManager.Instance.ReplyDisplayUI.SetActive(false);
+        //GameUIManager.Instance.ReplyInputUI.SetActive(false);
+        //GameUIManager.Instance.userPrompt.SetActive(false);
 
-        UIManager.Instance.SetRiddleText("");
-        UIManager.Instance.ClearUserReplyUIList();
-        
+        ////GameUIManager.Instance.SetRiddleText("");
+        //GameUIManager.Instance.ClearUserReplyUIList();
+
     }
 
     public static void TCPRiddleReceived(Packet _packet)
     {
+        int _prompt = _packet.ReadInt();
 
+        EChoice choice = (EChoice)_prompt;
+
+        //TODO SHU TOO: Set the game objects here:
+        /*
+         
+        */
         
-        string _prompt = _packet.ReadString();
+        //Debug.Log($"The riddle is this: {_prompt}");
 
-        Debug.Log($"The riddle is this: {_prompt}");
+        //UIManager.Instance.ReplyInputUI.SetActive(true);
+        //UIManager.Instance.ReplyDisplayUI.SetActive(false);
+        //UIManager.Instance.userPrompt.SetActive(true);
 
-        UIManager.Instance.ReplyInputUI.SetActive(true);
-        UIManager.Instance.ReplyDisplayUI.SetActive(false);
-        UIManager.Instance.userPrompt.SetActive(true);
-
-        GameManager.Instance.SetPrompt(_prompt);
-        GameManager.Instance.AssignNewRiddle();
-        UIManager.Instance.RandomizeProfileUIColor();
-        UIManager.Instance.RefreshPlayerScores();
-        UIManager.Instance.ResetAnswerAttemptFieldText();
-        UIManager.Instance.submitBtn.interactable = true;
-        UIManager.Instance.HideChoices();
+        //GameManager.Instance.SetPrompt(_prompt);
+        //GameManager.Instance.AssignNewRiddle();
+        //UIManager.Instance.RandomizeProfileUIColor();
+        //UIManager.Instance.RefreshPlayerScores();
+        //UIManager.Instance.ResetAnswerAttemptFieldText();
+        //UIManager.Instance.submitBtn.interactable = true;
+        //UIManager.Instance.HideChoices();
     }
 
     public static void TCPPlayerReceived(Packet _packet)
@@ -84,12 +108,12 @@ public class ClientHandler : MonoBehaviour
         string _username = _packet.ReadString();
         int _points = _packet.ReadInt();
 
-        if(!(GameManager.Instance.playerList.ContainsKey(_playerId)))
+        if (!(GameManager.Instance.playerList.ContainsKey(_playerId)))
         {
             Debug.Log($"adding player with id {_playerId} and username {_username} to player list");
             GameManager.Instance.AddPlayerToList(_playerId, _username, _points);
         }
-        
+
     }
 
     public static void TCPAnswerAttemptReceivedConfirmed(Packet _packet)
@@ -97,7 +121,7 @@ public class ClientHandler : MonoBehaviour
         int _player = _packet.ReadInt();
         string _answerGuess = _packet.ReadString();
         bool _isAnswerCorrect = _packet.ReadBool();
-        if(GameManager.Instance.isGameStarted)
+        if (GameManager.Instance.isGameStarted)
         {
             if (_isAnswerCorrect)
             {
@@ -109,7 +133,7 @@ public class ClientHandler : MonoBehaviour
                 GameManager.Instance.OnPlayerAttemptWrong(_player, _answerGuess);
             }
         }
-        
+
     }
 
     public static void TCPChatMessageForwardReceived(Packet _packet)
@@ -125,7 +149,7 @@ public class ClientHandler : MonoBehaviour
     {
         int _disconnectedPlayer = _packet.ReadInt();
 
-        if(GameManager.Instance.isGameStarted)
+        if (GameManager.Instance.isGameStarted)
         {
             GameManager.Instance.playerList.Remove(_disconnectedPlayer);
             UIManager.Instance.RemoveUserUI(_disconnectedPlayer);
@@ -138,7 +162,7 @@ public class ClientHandler : MonoBehaviour
         string _promptReply = _packet.ReadString();
         //UIManager.Instance.UpdateAttemptLog(_replySenderId.ToString(), _promptReply, false);
 
-        if(GameManager.Instance.playerList.ContainsKey(_replySenderId))
+        if (GameManager.Instance.playerList.ContainsKey(_replySenderId))
         {
             string username = GameManager.Instance.playerList[_replySenderId].username;
             UIManager.Instance.AddUserReplyUI(_replySenderId, username, _promptReply);
@@ -172,7 +196,7 @@ public class ClientHandler : MonoBehaviour
         Debug.Log(_id);
 
         GameManager.Instance.FinishRound(_id, _votes);
-        
+
     }
 
     public static void TCPTimerReceived(Packet _packet)
@@ -181,7 +205,7 @@ public class ClientHandler : MonoBehaviour
 
 
         Debug.Log(_currentTimerValue);
-        UIManager.Instance.SetTimer((int)_currentTimerValue);
+        GameUIManager.Instance.SetTimer((int)_currentTimerValue);
     }
 
 }

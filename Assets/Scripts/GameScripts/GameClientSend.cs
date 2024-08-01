@@ -2,26 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClientSend : MonoBehaviour
+public class GameClientSend : MonoBehaviour
 {
     private static void SendTCPData(Packet _packet)
     {
         _packet.WriteLength();
-        Client.Instance.tcp.SendData(_packet);
+        GameClient.Instance.tcp.SendData(_packet);
     }
 
     private static void SendUDPData(Packet _packet)
     {
         _packet.WriteLength();
-        Client.Instance.udp.SendData(_packet);
+        GameClient.Instance.udp.SendData(_packet);
     }
 
     public static void WelcomeReceived()
     {
-        using (Packet _packet = new Packet((int)ClientPackets.welcomeReceived))
+        using (Packet _packet = new Packet((int)GameClientPackets.welcomeReceived))
         {
-            _packet.Write(Client.Instance.myId);
-            _packet.Write(UIManager.Instance.usernameField.text);
+            _packet.Write(GameClient.Instance.myId);
+            _packet.Write(GameUIManager.Instance.usernameField.text);
 
             SendTCPData(_packet);
         }
@@ -29,7 +29,7 @@ public class ClientSend : MonoBehaviour
 
     public static void UDPTestReceived()
     {
-        using (Packet _packet = new Packet((int)ClientPackets.udpTestReceived))
+        using (Packet _packet = new Packet((int)GameClientPackets.udpTestReceived))
         {
             _packet.Write("Received a UDP packet");
 
@@ -39,23 +39,35 @@ public class ClientSend : MonoBehaviour
 
     public static void TCPPlayerReadyStatusChangeSend()
     {
-        Client.Instance.isReady = !Client.Instance.isReady;
-        bool _isReady = Client.Instance.isReady;
-        using (Packet _packet = new Packet((int)ClientPackets.playerReadysend))
+        GameClient.Instance.isReady = !GameClient.Instance.isReady;
+        bool _isReady = GameClient.Instance.isReady;
+        using (Packet _packet = new Packet((int)GameClientPackets.playerReadysend))
         {
-
             _packet.Write(_isReady);
-
 
             SendTCPData(_packet);
         }
     }
+    public static void TCPPlayerPressedPlay()
+    {
+        GameClient.Instance.clickedPlay = true;
+        bool clickedPlay = GameClient.Instance.clickedPlay;
 
+        using (Packet _packet = new Packet((int)GameClientPackets.PromptPlayButton))
+        {
+            _packet.Write(clickedPlay);
+
+            SendTCPData(_packet);
+        }
+
+    }
     public static void TCPPromptSelectSend(int _choice)
     {
-        using (Packet _packet = new Packet((int)ClientPackets.PromptSelectSend))
+        using (Packet _packet = new Packet((int)GameClientPackets.PromptSelectSend))
         {
+
             _packet.Write(_choice);
+
 
             SendTCPData(_packet);
         }
@@ -63,7 +75,7 @@ public class ClientSend : MonoBehaviour
     public static void TCPFinishedRoundSend()
     {
         bool _finishedROund = true;
-        using (Packet _packet = new Packet((int)ClientPackets.FinishedRoundSend))
+        using (Packet _packet = new Packet((int)GameClientPackets.FinishedRoundSend))
         {
             _packet.Write(_finishedROund);
             SendTCPData(_packet);
@@ -72,7 +84,7 @@ public class ClientSend : MonoBehaviour
 
     public static void TCPAsnwerAttempt(string _answerGuess, bool _isAnswerCorrect)
     {
-        using (Packet _packet = new Packet((int)ClientPackets.AnswerAttemptSend))
+        using (Packet _packet = new Packet((int)GameClientPackets.AnswerAttemptSend))
         {
             _packet.Write(_answerGuess);
             _packet.Write(_isAnswerCorrect);
@@ -83,7 +95,7 @@ public class ClientSend : MonoBehaviour
     public static void TCPRequestPlayerList()
     {
         string _msg = "Requesting player list";
-        using (Packet _packet = new Packet((int)ClientPackets.PlayerListRequested))
+        using (Packet _packet = new Packet((int)GameClientPackets.PlayerListRequested))
         {
             _packet.Write(_msg);
             SendTCPData(_packet);
@@ -92,7 +104,7 @@ public class ClientSend : MonoBehaviour
 
     public static void TCPChatMessageSend(string _msg)
     {
-        using(Packet _packet = new Packet((int)ClientPackets.ChatMessageSend))
+        using (Packet _packet = new Packet((int)GameClientPackets.ChatMessageSend))
         {
             _packet.Write(_msg);
             SendTCPData(_packet);
@@ -101,7 +113,7 @@ public class ClientSend : MonoBehaviour
 
     //public static void TCPHostSetPromptSend(string _prompt)
     //{
-    //    using (Packet _packet = new Packet((int)ClientPackets.HostSetPromptSend))
+    //    using (Packet _packet = new Packet((int)GameClientPackets.HostSetPromptSend))
     //    {
     //        _packet.Write(_prompt);
     //        SendTCPData(_packet);
@@ -110,7 +122,7 @@ public class ClientSend : MonoBehaviour
 
     public static void TCPPromptReplySend(string _reply)
     {
-        using (Packet _packet = new Packet((int)ClientPackets.PromptReplySend))
+        using (Packet _packet = new Packet((int)GameClientPackets.PromptReplySend))
         {
             _packet.Write(_reply);
             SendTCPData(_packet);
@@ -119,7 +131,7 @@ public class ClientSend : MonoBehaviour
 
     public static void TCPSendVoteForReply(int idReceiver)
     {
-        using (Packet _packet = new Packet((int)ClientPackets.VoteForReplySend))
+        using (Packet _packet = new Packet((int)GameClientPackets.VoteForReplySend))
         {
             _packet.Write(idReceiver);
 

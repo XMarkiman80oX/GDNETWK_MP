@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using TMPro;
 
 
 public class GameUIManager : MonoBehaviour
@@ -14,15 +15,16 @@ public class GameUIManager : MonoBehaviour
     
     public Button readyBtn;
     public Button submitBtn;
+    public Button playButton;
 
-
+    public InputField usernameField;
 
     public InputField answerAttemptField;
     public InputField chatField;
     public Text connectedStatusText;
     public Text riddleQuestionText;
     public Text riddleAnswerText;
-    public Text timerTxt;
+    public TextMeshProUGUI timerTxt;
     public Sprite CorrectMark;
     public Sprite WrongMark;
     public GameObject chatTemplate;
@@ -64,12 +66,6 @@ public class GameUIManager : MonoBehaviour
         usersMarksTrackerUIList = new List<GameObject>();
     }
 
-    void Update()
-    {
-
-    }
-
-
 
     //CONNECTION METHODS
 
@@ -77,7 +73,7 @@ public class GameUIManager : MonoBehaviour
     {
         //startMenu.SetActive(false);
         //usernameField.interactable = false;
-        Client.Instance.ConnectToServerTCP();
+        GameClient.Instance.ConnectToServerTCP();
     }
 
     public void ConnectToServerUDP()
@@ -87,22 +83,26 @@ public class GameUIManager : MonoBehaviour
 
     public void PlayerReadyChangeTCP()
     {
-        if (readyBtn != null && Client.Instance.isConnected)
+        if (readyBtn != null && GameClient.Instance.isConnected)
         {
-            if(Client.Instance.isReady) 
+            if(GameClient.Instance.isReady) 
                 readyBtn.image.color = new Color(1.0f, 0.392f, 0.392f);    //make red
 
             else
                 readyBtn.image.color = new Color(0.392f, 1.0f, 0.392f);    //make green
-
         }
-            
-        ClientSend.TCPPlayerReadyStatusChangeSend();
+        else if (readyBtn != null && !GameClient.Instance.isConnected)
+            Debug.Log("CLIENT IS NOT CONNECTED");
+
+        GameClientSend.TCPPlayerReadyStatusChangeSend();
     }
 
+    public void PlayerPressedPlay()
+    {
+        GameClientSend.TCPPlayerPressedPlay();
+    }
     public void HideChoices()
     {
-
         //Choice1Btn.gameObject.SetActive(false);
         //Choice2Btn.gameObject.SetActive(false);
         //Choice3Btn.gameObject.SetActive(false);
@@ -110,22 +110,21 @@ public class GameUIManager : MonoBehaviour
         SelectPrompt.SetActive(false);
 
     }
-
-    public void SelectChoice1()
+    public void SelectRock()
     {
-        ClientSend.TCPPromptSelectSend(0);
+        GameClientSend.TCPPromptSelectSend((int)EChoice.ROCK);
         HideChoices();
     }
 
-    public void SelectChoice2()
+    public void SelectPaper()
     {
-        ClientSend.TCPPromptSelectSend(1);
+        GameClientSend.TCPPromptSelectSend((int)EChoice.PAPER);
         HideChoices();
     }
 
-    public void SelectChoice3()
+    public void SelectScissors()
     {
-        ClientSend.TCPPromptSelectSend(2);
+        GameClientSend.TCPPromptSelectSend((int)EChoice.SCISSORS);
         HideChoices();
     }
 
@@ -195,7 +194,6 @@ public class GameUIManager : MonoBehaviour
 
     public void HideMainUI()
     {
-
         mainCanvas.gameObject.SetActive(false);
         preGameCanvas.gameObject.SetActive(true);
     }

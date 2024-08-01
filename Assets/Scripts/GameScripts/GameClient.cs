@@ -6,9 +6,9 @@ using System.Net;
 using System.Net.Sockets;
 using System;
 
-public class Client : MonoBehaviour
+public class GameClient : MonoBehaviour
 {
-    public static Client Instance;
+    public static GameClient Instance;
     public static int dataBufferSize = 4096;
 
     public string ip = "127.0.0.1";
@@ -18,6 +18,7 @@ public class Client : MonoBehaviour
     public UDP udp;
     public bool isReady = false;
     public bool isConnected = false;
+    public bool clickedPlay = false;
 
 
     private delegate void PacketHandler(Packet _packet);
@@ -44,13 +45,13 @@ public class Client : MonoBehaviour
     }
     public void ConnectToServerTCP()
     {
-        if(!isConnected)
+        if (!isConnected)
         {
             tcp.Connect();
-            
+
         }
-        
-        
+
+
     }
 
     public void ConnectToServerUDP()
@@ -71,19 +72,19 @@ public class Client : MonoBehaviour
             {
                 ReceiveBufferSize = dataBufferSize,
                 SendBufferSize = dataBufferSize
-                
+
             };
 
             receiveBuffer = new byte[dataBufferSize];
             socket.BeginConnect(Instance.ip, Instance.port, ConnectCallback, socket);
         }
 
- 
+
         private void ConnectCallback(IAsyncResult _result)
         {
             socket.EndConnect(_result);
 
-            if(!socket.Connected)
+            if (!socket.Connected)
             {
                 return;
             }
@@ -99,13 +100,13 @@ public class Client : MonoBehaviour
         {
             try
             {
-                if(socket != null)
+                if (socket != null)
                 {
                     stream.BeginWrite(_packet.ToArray(), 0, _packet.Length(), null, null);
                 }
             }
 
-            catch(Exception _ex)
+            catch (Exception _ex)
             {
                 Debug.Log($"Error sending data to server via TCP: {_ex}");
             }
@@ -115,7 +116,7 @@ public class Client : MonoBehaviour
             try
             {
                 int _bytelength = stream.EndRead(_result);
-                if(_bytelength <= 0)
+                if (_bytelength <= 0)
                 {
                     Instance.Disconnect();
                     return;
@@ -140,17 +141,17 @@ public class Client : MonoBehaviour
             int _packetLength = 0;
             receivedData.SetBytes(_data);
 
-            if(receivedData.UnreadLength() >= 4)
+            if (receivedData.UnreadLength() >= 4)
             {
                 _packetLength = receivedData.ReadInt();
-                if(_packetLength <= 0)
+                if (_packetLength <= 0)
                 {
                     return true;
 
                 }
             }
 
-            while(_packetLength > 0 && _packetLength <= receivedData.UnreadLength())
+            while (_packetLength > 0 && _packetLength <= receivedData.UnreadLength())
             {
                 byte[] _packetBytes = receivedData.ReadBytes(_packetLength);
                 //receivedData is a Packet class
@@ -178,7 +179,7 @@ public class Client : MonoBehaviour
                 }
             }
 
-            if(_packetLength <= 1)
+            if (_packetLength <= 1)
             {
                 return true;
             }
@@ -214,7 +215,7 @@ public class Client : MonoBehaviour
             socket.Connect(endPoint);
             socket.BeginReceive(ReceiveCallback, null);
 
-            using(Packet _packet = new Packet())
+            using (Packet _packet = new Packet())
             {
                 SendData(_packet);
             }
@@ -225,14 +226,14 @@ public class Client : MonoBehaviour
             try
             {
                 _packet.InsertInt(Instance.myId);
-                if(socket != null)
+                if (socket != null)
                 {
                     socket.BeginSend(_packet.ToArray(), _packet.Length(), null, null);
 
                 }
             }
 
-            catch(Exception _ex)
+            catch (Exception _ex)
             {
                 Debug.Log($"Error sending udp data to server: {_ex}");
             }
@@ -245,7 +246,7 @@ public class Client : MonoBehaviour
                 byte[] _data = socket.EndReceive(_result, ref endPoint);
                 socket.BeginReceive(ReceiveCallback, null);
 
-                if(_data.Length < 4)
+                if (_data.Length < 4)
                 {
                     Instance.Disconnect();
                     return;
@@ -284,7 +285,7 @@ public class Client : MonoBehaviour
             Instance.Disconnect();
 
             endPoint = null;
-            socket = null; 
+            socket = null;
         }
 
 
@@ -293,20 +294,22 @@ public class Client : MonoBehaviour
     {
         packetHandlers = new Dictionary<int, PacketHandler>()
         {
-            {(int)ServerPackets.welcome, ClientHandler.Welcome  },
-            {(int)ServerPackets.udpTest, ClientHandler.UDPTest  },
-            {(int)ServerPackets.playerReadyReceived, ClientHandler.TCPPlayerReadyReceivedConfirmReceived},
-            {(int)ServerPackets.PromptChoicesSend, ClientHandler.TCPPromptChoicesReceived  },
-            {(int)ServerPackets.RiddleSend, ClientHandler.TCPRiddleReceived  },
-            {(int)ServerPackets.AnswerAttemptReceived, ClientHandler.TCPAnswerAttemptReceivedConfirmed  },
-            {(int)ServerPackets.PlayerListSend, ClientHandler.TCPPlayerReceived  },
-            {(int)ServerPackets.ChatMessageForwardSend, ClientHandler.TCPChatMessageForwardReceived },
-            {(int)ServerPackets.PlayerDisconnectSend, ClientHandler.TCPPlayerDisconnectReceived  },
-            {(int)ServerPackets.PromptReplyRelaySend, ClientHandler.TCPPromptReplyRelayReceived  },
-            {(int)ServerPackets.AllPlayersRepliedSend, ClientHandler.TCPAllPlayersRepliedReceived  },
-            {(int)ServerPackets.VotedForReplyRelaySend, ClientHandler.TCPVoteForReplyRelayReceived  },
-            {(int)ServerPackets.HighestVotesSend, ClientHandler.TCPHighestVotesReceived  },
-            {(int)ServerPackets.TimerSend, ClientHandler.TCPTimerReceived  }
+            {(int)GameServerPackets.welcome, GameClientHandler.Welcome  },
+            {(int)GameServerPackets.udpTest, GameClientHandler.UDPTest  },
+            {(int)GameServerPackets.playerReadyReceived, GameClientHandler.TCPPlayerReadyReceivedConfirmReceived},
+            {(int)GameServerPackets.PressedPlayReceived, GameClientHandler.TCPPressedPlayReceivedConfirm},
+            //{(int)GameServerPackets.PromptStartGame, GameClientHandler.TCPPromptStartGame},
+            {(int)GameServerPackets.PromptChoicesSend, GameClientHandler.TCPPromptChoicesReceived  },
+            {(int)GameServerPackets.RiddleSend, GameClientHandler.TCPRiddleReceived  },
+            {(int)GameServerPackets.AnswerAttemptReceived, GameClientHandler.TCPAnswerAttemptReceivedConfirmed  },
+            {(int)GameServerPackets.PlayerListSend, GameClientHandler.TCPPlayerReceived  },
+            {(int)GameServerPackets.ChatMessageForwardSend, GameClientHandler.TCPChatMessageForwardReceived },
+            {(int)GameServerPackets.PlayerDisconnectSend, GameClientHandler.TCPPlayerDisconnectReceived  },
+            {(int)GameServerPackets.PromptReplyRelaySend, GameClientHandler.TCPPromptReplyRelayReceived  },
+            {(int)GameServerPackets.AllPlayersRepliedSend, GameClientHandler.TCPAllPlayersRepliedReceived  },
+            {(int)GameServerPackets.VotedForReplyRelaySend, GameClientHandler.TCPVoteForReplyRelayReceived  },
+            {(int)GameServerPackets.HighestVotesSend, GameClientHandler.TCPHighestVotesReceived  },
+            {(int)GameServerPackets.TimerSend, GameClientHandler.TCPTimerReceived  }
         };
 
         Debug.Log("Initialized packets");
@@ -314,23 +317,23 @@ public class Client : MonoBehaviour
 
     private void Disconnect()
     {
-        if(isConnected)
+        if (isConnected)
         {
             isConnected = false;
-            if(tcp.socket.Connected)
+            if (tcp.socket.Connected)
                 tcp.socket.Close();
 
-            if(udp.socket != null)
+            if (udp.socket != null)
                 udp.socket.Close();
 
-            UIManager.Instance.HideMainUI();
-            UIManager.Instance.SetConnectedText(false);
+            GameUIManager.Instance.HideMainUI();
+            GameUIManager.Instance.SetConnectedText(false);
 
-            
+
             GameManager.Instance.isGameStarted = false;
 
             Debug.Log("Disconnected from server");
-            
+
         }
     }
 }

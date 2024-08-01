@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using TMPro;
 
 public class RPSGameManager : MonoBehaviour {
+
+    private int _timesLoaded = 0;
+
     private static RPSGameManager _instance;
     public static RPSGameManager Instance {
         get { if (_instance == null) {}
@@ -35,12 +38,24 @@ public class RPSGameManager : MonoBehaviour {
     [SerializeField]
     private TMP_Text _timerText;
 
-    private bool _timerRunning;
+    private bool _timerRunning = false;
 
     private float _timerLimit = 60.0f;
 
-    private float _timeLeft;
+    private float _timeLeft = 60.0f;
 
+    [SerializeField]
+    private bool _isGameLoaded = false;
+    public bool IsGameLoaded
+    {
+        get { return _isGameLoaded; } 
+    }
+    [SerializeField]
+    private bool _isGameStarted = false;
+    public bool IsGameStarted
+    {
+        get { return _isGameStarted; }
+    }
     private void CheckChoices() {
         EChoice p1Choice = Player1Manager.Instance.Choice;
         EChoice p2Choice = Player2Manager.Instance.Choice;
@@ -98,24 +113,43 @@ public class RPSGameManager : MonoBehaviour {
         }
         this.ResetPlayers();
     }
+    public void OnGameLoad(string playername) {//when first loading the game
+        this._timesLoaded++;
 
-    public void OnGameLoad() {//when first loading the game
-        this.IntitializePlayers();
+        if (this._timesLoaded > 2)
+            this._timesLoaded = 1;
+
+        switch (this._timesLoaded)
+        {
+            case 1:
+                Player1Manager.Instance.IntitializePlayer(playername);
+                break;
+            case 2:
+                Player2Manager.Instance.IntitializePlayer(playername);
+                break;
+        }
+
+        GameUIManager.Instance.ShowMainUI();
         this._playButton.gameObject.SetActive(true);
         this._playButton.interactable = true;
         this._choices.SetActive(false);
-        this._timerRunning = false;
+        //this._timerRunning = false;
         this._resultText.text = "";
+        this._isGameLoaded = true;
+        Debug.Log("IS GAME LOADED: " + this._isGameLoaded);
     }
 
     public void OnGameStart() {//when pressing play button
         this.ResetGame();
+        this._timerRunning = true;
         this._playButton.gameObject.SetActive(false);
         this._playButton.interactable = false;
         this._choices.SetActive(true);
-        this._timerRunning = true;
+        //this._timerRunning = true;
         this._timeLeft = this._timerLimit;
         this._resultText.text = "";
+
+        this._isGameStarted = true;
     }
 
     public void OnGameEnd() {
@@ -144,6 +178,8 @@ public class RPSGameManager : MonoBehaviour {
         }
         this._resultText.text = resultText;
         this._resultTextObj.transform.position = new Vector3(xPos, 350, 0);
+        this._isGameLoaded = false;
+        this._isGameStarted = false;
     }
 
     public void ResetGame() {
@@ -154,11 +190,18 @@ public class RPSGameManager : MonoBehaviour {
     public void ResetPlayers() {
         Player1Manager.Instance.ResetPlayerState();
         Player2Manager.Instance.ResetPlayerState();
+
+        this._choices.gameObject.SetActive(false);
     }
 
     public void IntitializePlayers() {
         Player1Manager.Instance.IntitializePlayer();
         Player2Manager.Instance.IntitializePlayer();
+    }
+    public void IntitializePlayers(string player1name, string player2name)
+    {
+        Player1Manager.Instance.IntitializePlayer(player1name);
+        Player2Manager.Instance.IntitializePlayer(player2name);
     }
 
     private void UpdateTimeLeft() {
@@ -166,22 +209,13 @@ public class RPSGameManager : MonoBehaviour {
             if (_timeLeft >= 0) {
                 _timeLeft -= Time.deltaTime;
             }
-            _timerText.text = $"Time Left: {_timeLeft:F2}";
+            _timerText.text = $"{_timeLeft:F2}";
         }
         else {
             Debug.LogWarning("Time text not found.");
         }
     }
 
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if(_timeLeft > 0) {
@@ -192,7 +226,8 @@ public class RPSGameManager : MonoBehaviour {
         }
         else {
             _timeLeft = 0;
-            _timerText.text = $"Time Left: {_timeLeft:F2}";
+            _timerText.text = $"{_timeLeft:F2}";
+            Debug.Log("GAME ENDED");
             OnGameEnd();
         }
     }
