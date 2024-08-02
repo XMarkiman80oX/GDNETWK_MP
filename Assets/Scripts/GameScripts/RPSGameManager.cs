@@ -113,21 +113,10 @@ public class RPSGameManager : MonoBehaviour {
         }
         this.ResetPlayers();
     }
-    public void OnGameLoad(string playername) {//when first loading the game
-        this._timesLoaded++;
-
-        if (this._timesLoaded > 2)
-            this._timesLoaded = 1;
-
-        switch (this._timesLoaded)
-        {
-            case 1:
-                Player1Manager.Instance.IntitializePlayer(playername);
-                break;
-            case 2:
-                Player2Manager.Instance.IntitializePlayer(playername);
-                break;
-        }
+    public void OnGameLoad(string player1name, string player2name) {//when first loading the game
+        
+        Player1Manager.Instance.IntitializePlayer(player1name);
+        Player2Manager.Instance.IntitializePlayer(player2name);
 
         GameUIManager.Instance.ShowMainUI();
         this._playButton.gameObject.SetActive(true);

@@ -53,13 +53,13 @@ public class GameClientHandler : MonoBehaviour
 
     public static void TCPPromptChoicesReceived(Packet _packet)
     {
-        string playerUsername = _packet.ReadString();
+        string player1Username = _packet.ReadString();
+        string player2Username = _packet.ReadString();
 
-        Debug.Log("Inside TCPPromptChoicesReceived-> playerUsername:" + playerUsername);
         //Debug.Log("Inside TCPPromptChoicesReceived-> player2Username:" + player2Username);
         if (!RPSGameManager.Instance.IsGameLoaded)
         {
-            RPSGameManager.Instance.OnGameLoad(playerUsername);
+            RPSGameManager.Instance.OnGameLoad(player1Username, player2Username);
         }
         //string _choice1 = _packet.ReadString();
         //string _choice2 = _packet.ReadString();
