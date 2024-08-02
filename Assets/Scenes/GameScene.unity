@@ -1661,9 +1661,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73e1dfb959d3c5b439445937fcf1784c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rock: {fileID: 0}
-  Paper: {fileID: 0}
-  Scissors: {fileID: 0}
+  Rock: {fileID: 903872914}
+  Paper: {fileID: 2081454976}
+  Scissors: {fileID: 1003128233}
 --- !u!1 &605467561
 GameObject:
   m_ObjectHideFlags: 0
@@ -3730,7 +3730,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbb8a733cab41124b88dab91076874c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ip: 25.43.203.166
+  ip: 1
   port: 26951
   myId: 0
   isReady: 0
