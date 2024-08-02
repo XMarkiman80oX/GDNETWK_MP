@@ -48,6 +48,8 @@ public class GameUIManager : MonoBehaviour
     public Transform usersMarksTrackerUITransform;
     public Transform usersPointsTrackerUITransform;
 
+    public GameObject player1DisplayedChoice;
+    public GameObject player2DisplayedChoice;
     private Text pointsText;
 
 
@@ -109,6 +111,18 @@ public class GameUIManager : MonoBehaviour
 
         SelectPrompt.SetActive(false);
 
+    }
+    public void SendChoice(int playerIndex, EChoice choice)
+    {
+        switch (playerIndex)
+        {
+            case 1:
+                this.player1DisplayedChoice.GetComponent<DisplayChoice>().DisplayChoiceFunc(choice);
+                break;
+            case 2:
+                this.player2DisplayedChoice.GetComponent<DisplayChoice>().DisplayChoiceFunc(choice);
+                break;
+        }
     }
     public void SelectRock()
     {

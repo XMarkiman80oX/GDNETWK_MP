@@ -661,6 +661,8 @@ MonoBehaviour:
   chatLog: []
   usersMarksTrackerUITransform: {fileID: 0}
   usersPointsTrackerUITransform: {fileID: 0}
+  player1DisplayedChoice: {fileID: 2042121479}
+  player2DisplayedChoice: {fileID: 604846065}
 --- !u!1 &356314377
 GameObject:
   m_ObjectHideFlags: 0
@@ -1582,6 +1584,7 @@ GameObject:
   - component: {fileID: 604846066}
   - component: {fileID: 604846068}
   - component: {fileID: 604846067}
+  - component: {fileID: 604846069}
   m_Layer: 5
   m_Name: P2Choice
   m_TagString: Untagged
@@ -1646,6 +1649,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 604846065}
   m_CullTransparentMesh: 1
+--- !u!114 &604846069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 604846065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73e1dfb959d3c5b439445937fcf1784c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Rock: {fileID: 0}
+  Paper: {fileID: 0}
+  Scissors: {fileID: 0}
 --- !u!1 &605467561
 GameObject:
   m_ObjectHideFlags: 0
@@ -2288,10 +2306,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -5765,6 +5783,7 @@ GameObject:
   - component: {fileID: 2042121480}
   - component: {fileID: 2042121482}
   - component: {fileID: 2042121481}
+  - component: {fileID: 2042121483}
   m_Layer: 5
   m_Name: P1Choice
   m_TagString: Untagged
@@ -5829,6 +5848,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2042121479}
   m_CullTransparentMesh: 1
+--- !u!114 &2042121483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2042121479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73e1dfb959d3c5b439445937fcf1784c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Rock: {fileID: 903872914}
+  Paper: {fileID: 2081454976}
+  Scissors: {fileID: 1003128233}
 --- !u!1 &2045013536
 GameObject:
   m_ObjectHideFlags: 0

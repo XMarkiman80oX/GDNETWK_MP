@@ -79,13 +79,16 @@ public class GameClientHandler : MonoBehaviour
     public static void TCPChoiceReceived(Packet _packet)
     {
         int _prompt = _packet.ReadInt();
+        int _playerIndex = _packet.ReadInt();
 
         EChoice choice = (EChoice)_prompt;
 
+        Debug.Log("CHOSEN: " + choice);
         //TODO SHU TOO: Set the game objects here:
         /*
          
         */
+        GameUIManager.Instance.SendChoice(_playerIndex, choice);
         
         //Debug.Log($"The riddle is this: {_prompt}");
 
